@@ -1,0 +1,24 @@
+{
+    "name": "sevenpointsix/zfw",
+    "description": "A Laravel package for automating data collection from forms",
+    "require": {
+        "php": "^7.1",
+        "laravel/framework": "5.5"
+    },
+    "authors": [
+        {
+            "name": "Chris Gibson",
+            "email": "chris@phoenixdigital.agency"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sevenpointsix\\Zfw\\ZfwServiceProvider"
+            ],
+            "aliases": {
+                "Zfw": "Sevenpointsix\\Zfw\\ZfwFacade"
+            }
+        }
+    }
+}
