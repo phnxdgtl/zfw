@@ -11,6 +11,11 @@
             "email": "chris@phoenixdigital.agency"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Sevenpointsix\\Zfw\\": "src"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
