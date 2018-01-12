@@ -45,11 +45,10 @@ class ZfwNotification extends Mailable
                 break;
         }
 
-
         return $this->markdown('zfw.notification-email',[
                     'message'=>$this->message
                 ])
-                ->from('Form from website')
+                ->from($from)
                 ->subject('Form from website');
     }
 }
