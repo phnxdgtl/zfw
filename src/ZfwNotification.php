@@ -32,6 +32,6 @@ class ZfwNotification extends Mailable
     {
         return $this->markdown('zfw.notification-email',[
             'message'=>$this->message
-        ]);
+        ])->subject('Form from website');
     }
 }
