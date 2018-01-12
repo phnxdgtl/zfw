@@ -16,9 +16,14 @@ return [
         "to": "",
         "fields": {
                 "name": {
-                    "type":         "",
-                    "label":        "",
-                    "validation":   ""
+                    "type":         "text",
+                    "label":        "Name",
+                    "validation":   "required"
+                },
+                "email": {
+                    "type":         "email",
+                    "label":        "Email address",
+                    "validation":   "required|email"
                 }
             }
         }

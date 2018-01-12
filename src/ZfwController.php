@@ -91,6 +91,9 @@ class ZfwController extends Controller
 
         foreach ($fields as $fieldName=>$data) {
             $value = $this->formatValueFromRequest($request, $form, $fieldName);
+
+            if (!$value) continue; // This is right, I think? Don't show a label for an empty value?
+
             $labelDelimiter = substr($data->label,-1) == '?' ? '': ':';
             $string = "**{$data->label}{$labelDelimiter}** ";
             if ($data->type == 'textarea') {
@@ -131,7 +134,7 @@ class ZfwController extends Controller
     protected function getFormConfig($form,$key = NULL) {
         $config = json_decode(config('zfw.forms'));
         if (is_null($config)) {
-            trigger_error("Config file doesn't exist for form $form");
+            trigger_error("Config file doesn't exist for form $form, or isn't valid");
             return false;
         }
         if ($key) {
