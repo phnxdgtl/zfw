@@ -30,8 +30,26 @@ class ZfwNotification extends Mailable
      */
     public function build()
     {
+
+        switch (App::environment()) {
+            case 'staging':
+                $from = 'noreply@phoenixdigital.agency'; // Assumes we're using the staging Mailgun account
+                break;
+            case 'production':
+            case 'local':
+            default:
+                $app_url    = env('APP_URL');
+                $parse_url  = parse_url($app_url);
+                $host       = preg_replace('/^www/','',$parse_url['host']);
+                $from       = 'noreply@'.$host;
+                break;
+        }
+
+
         return $this->markdown('zfw.notification-email',[
-            'message'=>$this->message
-        ])->subject('Form from website');
+                    'message'=>$this->message
+                ])
+                ->from('Form from website')
+                ->subject('Form from website');
     }
 }
