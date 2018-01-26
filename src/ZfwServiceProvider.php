@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 
 class ZfwServiceProvider extends ServiceProvider
 {
+
+    // Add the artisan command; from http://stackoverflow.com/questions/28492394/laravel-5-creating-artisan-command-for-packages. See @register()
+	protected $commands = [
+        \Sevenpointsix\Zfw\ZfwCommand::class,
+     ];
+
     /**
      * Bootstrap the application services.
      *
@@ -30,13 +36,8 @@ class ZfwServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->commands($this->commands);
         $this->app->make('Sevenpointsix\Zfw\ZfwController');
-
-        /* Not working
-        $this->app->bind('zwf', function () {
-            return new Zfw;
-        });
-        */
     }
 
 }

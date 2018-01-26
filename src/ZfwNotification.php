@@ -31,6 +31,16 @@ class ZfwNotification extends Mailable
     public function build()
     {
 
+        $from = $this->getDefaultFromAddress();
+
+        return $this->markdown('zfw.notification-email',[
+                    'message'=>$this->message
+                ])
+                ->from($from)
+                ->subject('Form from website');
+    }
+
+    protected function getDefaultFromAddress() {
         switch (App::environment()) {
             case 'staging':
                 $from = 'noreply@phoenixdigital.agency'; // Assumes we're using the staging Mailgun account
@@ -44,11 +54,6 @@ class ZfwNotification extends Mailable
                 $from       = 'noreply@'.$host;
                 break;
         }
-
-        return $this->markdown('zfw.notification-email',[
-                    'message'=>$this->message
-                ])
-                ->from($from)
-                ->subject('Form from website');
+        return $from;
     }
 }
