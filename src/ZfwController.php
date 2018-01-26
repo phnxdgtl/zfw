@@ -20,6 +20,9 @@ class ZfwController extends Controller
     }
 
     public function formHandler(Request $request, $form) {
+
+        // dd($_POST);
+
         $this->validateForm($request, $form);
         $this->saveFormData($request, $form);
         $this->emailFormData($request, $form);
@@ -99,7 +102,7 @@ class ZfwController extends Controller
             if ($data->type == 'textarea') {
                 $string = "\n$string \n*$value*\n\n";
             }
-            else if ($data->type == 'checkbox') {
+            else if ($data->type == 'checkbox' && in_array($value,[1,0])) {
                 $string .= $value ? 'No' : 'Yes';
             }
             else {
@@ -125,8 +128,13 @@ class ZfwController extends Controller
         $value  = $request->input($fieldName);
         $field  = $this->getFormConfig($form,'fields');
         $type   = $field->$fieldName->type;
-        if ($type == 'checkbox' && is_null($value)) {
-            $value = 0;
+        if ($type == 'checkbox') {
+            if (is_array($value)) {
+                $value = implode(', ',$value);
+            }
+            else if (is_null($value)) {
+                $value = 0;
+            }
         }
         return $value;
     }

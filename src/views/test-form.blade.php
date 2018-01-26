@@ -9,7 +9,7 @@
     <title>ZFW</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
       body {
         padding-top: 5rem;
@@ -44,7 +44,7 @@
                   <strong>Thanks!</strong> We'll be in touch. <a href="{{ route('zfw-test') }}">Back</a>
                 </div>
             @else
-              <form method="post" class="zfw" action="{{ route('zfw',['form'=>'test']) }}">
+              <form method="post" {!! Zfw::form('test') !!}>
                   {{ csrf_field() }}
                   <div class="form-group">
                       <label for="name">Name</label>
@@ -58,6 +58,19 @@
                     <label for="message">Message</label>
                     <textarea  class="form-control" id="message" name="message" rows="3">{{ old('message') }}</textarea>
                   </div>
+
+                  <div class="form-group">
+                    <p>Options:</p>
+                    @for ($i = 1; $i <= 3; $i++)
+                    <div class="form-check">
+                      <input class="form-check-input" name="options[]" type="checkbox" value="Option {{ $i }}" id="option-{{ $i }}" @if (is_array(old('options')) && in_array("Option $i", old('options'))) checked="checked" @endif>
+                      <label class="form-check-label" for="option-{{ $i }}">
+                        Option {{ $i }}
+                      </label>
+                    </div>
+                    @endfor
+                  </div>
+
                   <div class="form-check">
                       <input type="checkbox" class="form-check-input" id="optin" name="optin" value="1"  @if (old('optin')) checked="checked" @endif>
                       <label class="form-check-label" for="optin"> Opt in</label>
@@ -76,7 +89,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     {!!  Zfw::renderJS() !!}
 
