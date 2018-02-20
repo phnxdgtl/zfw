@@ -97,6 +97,11 @@ class ZfwController extends Controller
 
             if (!$value) continue; // This is right, I think? Don't show a label for an empty value?
 
+            /**
+             * Also, if we haven't specified a label, don't include this in the email. This makes it easy to exclude fields from the email.
+             */
+            if (empty($data->label)) continue;
+
             $labelDelimiter = substr($data->label,-1) == '?' ? '': ':';
             $string = "**{$data->label}{$labelDelimiter}** ";
             if ($data->type == 'textarea') {
