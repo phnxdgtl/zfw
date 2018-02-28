@@ -19,13 +19,22 @@ class ZfwController extends Controller
         ]);
     }
 
+    /**
+     * Handle the posted form data
+     *
+     * @param Request $request
+     * @param string $form The name of the form
+     * @return void
+     */
     public function formHandler(Request $request, $form) {
 
-        // dd($_POST);
-
         $this->validateForm($request, $form);
-        $this->saveFormData($request, $form);
-        $this->emailFormData($request, $form);
+        $id = $this->saveFormData($request, $form);
+        /**
+         * Old, non-GDPR code:
+         * $this->emailFormData($request, $form);
+         */
+        $this->emailFormDataGDPR($request, $form, $id);
         return $this->backToThanks();
     }
 
@@ -41,6 +50,13 @@ class ZfwController extends Controller
         return redirect($back);
     }
 
+    /**
+     * Validate the Form
+     *
+     * @param Request $request
+     * @param string $form The name of the form
+     * @return void
+     */
     protected function validateForm($request, $form) {
 
         $validationRules = [];
@@ -56,6 +72,13 @@ class ZfwController extends Controller
         $validatedData = $request->validate($validationRules);
     }
 
+    /**
+     * Save form data to the database
+     *
+     * @param Request $request
+     * @param string $form The name of the form
+     * @return integer $id The ID of the database record created
+     */
     protected function saveFormData($request, $form) {
         $tableName = "zfw_".$form;
         if (!Schema::hasTable($tableName)) {
@@ -72,14 +95,18 @@ class ZfwController extends Controller
             }
         }
 
-        DB::table($tableName)->insert(
+        $id = DB::table($tableName)->insertGetId(
             $insertData
         );
+
+        return $id;
 
      }
 
      /**
       * Email data from a form to the recipient stated in the config file
+      * NOTE: this is not GDPR compliant. I'm really leaving this here for
+      * reference only. See: @emailFormDataGDPR
       *
       * @param [type] $request
       * @param [type] $form
@@ -117,6 +144,77 @@ class ZfwController extends Controller
         }
 
         $message = implode("  \n",$emailData);
+
+        Mail::to($to)->send(new ZfwNotification($message));
+     }
+
+     /**
+      * Email data from a form to the recipient stated in the config file
+      * in a GDPR-compliant way; ie, a link to the CMS.
+      *
+      * @param Request $request
+      * @param string $form
+      * @param integer $id The ID of the saved form in the database
+      * @return void
+      */
+      protected function emailFormDataGDPR($request, $form, $id) {
+
+        $emailData = [];
+
+        $to     = $this->getFormConfig($form,'to');
+        $fields = $this->getFormConfig($form,'fields');
+
+        foreach ($fields as $fieldName=>$data) {
+            $value = $this->formatValueFromRequest($request, $form, $fieldName);
+
+            if (!$value) continue; // This is right, I think? Don't show a label for an empty value?
+
+            /**
+             * Also, if we haven't specified a label, don't include this in the email.
+             * This makes it easy to exclude fields from the email.
+             */
+            if (empty($data->label)) continue;
+
+            $labelDelimiter = substr($data->label,-1) == '?' ? '': ':';
+            $string = "**{$data->label}{$labelDelimiter}** ";
+
+            if ($data->type == 'textarea') {
+                /**
+                 * Add some spaces around a longer "message"-type field
+                 */
+                $string = "\n$string \n*$value*\n\n";
+            }
+            else {
+                continue; // Ignore all other fields; we could check this above
+            }
+
+            /**
+             * We *only* handle textareas here, on the basis that they're likely to be "message" fields.
+             */
+
+            $emailData[] = $string;
+        }
+
+        $message = implode("  \n",$emailData);
+
+        $tableName   = "zfw_".$form;
+        $ctrlClassId = DB::table('ctrl_classes')->where('table_name', $tableName)->value('id');
+
+        if (empty($ctrlClassId)) {
+            trigger_error("CtrlClass doesn't exist for form $form");
+            return false;
+        }
+
+        /**
+         * Can/should we check for an existing route here?
+         * Something like Route::has('route.name');
+         */
+
+        $gdprLink    = route('ctrl::view_object',[
+                            'ctrl_class_id' => $ctrlClassId,
+                            'object_id'     => $id
+                        ]);
+        $message .= "\n\n[Click here to view this message]($gdprLink)";
 
         Mail::to($to)->send(new ZfwNotification($message));
      }
