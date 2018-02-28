@@ -40,12 +40,17 @@ class ZfwController extends Controller
 
     protected function backToThanks() {
         $thanks = 'thanks';
+
+        /**
+         * Surely we could/should redirect to a route named {$form}-thanks here?
+         */
+
         $previous = URL::previous();
         if (substr($previous,0 - strlen($thanks)) == $thanks) {
             $back = $previous;
         }
         else {
-            $back = "$previous/thanks";
+            $back = rtrim($previous,'/').'/thanks';
         }
         return redirect($back);
     }
@@ -255,7 +260,7 @@ class ZfwController extends Controller
             return false;
         }
         if ($key) {
-            return $config->$form->$key;
+            return $config->$form->$key ?? false;
         }
         else {
             return $config->$form;
