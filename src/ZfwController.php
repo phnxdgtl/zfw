@@ -162,6 +162,12 @@ class ZfwController extends Controller
         $emailData = [];
 
         $to     = $this->getFormConfig($form,'to');
+
+        /**
+         * If we don't set a "to" in the config, don't send an email
+         */
+        if (!$to) return false;
+
         $fields = $this->getFormConfig($form,'fields');
 
         foreach ($fields as $fieldName=>$data) {
