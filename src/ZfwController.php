@@ -195,13 +195,12 @@ class ZfwController extends Controller
                  */
                 $string = "\n$string \n*$value*\n\n";
             }
-            else {
-                continue; // Ignore all other fields; we could check this above
+            else if ($data->type == 'checkbox' && in_array($value,[1,0])) {
+                $string .= $value ? 'No' : 'Yes';
             }
-
-            /**
-             * We *only* handle textareas here, on the basis that they're likely to be "message" fields.
-             */
+            else {
+                $string .= "$value";
+            }
 
             $emailData[] = $string;
         }
