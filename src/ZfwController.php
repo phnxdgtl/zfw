@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Schema;
 
+use Carbon\Carbon;
+
 use DB;
 use URL;
 use Mail;
@@ -91,7 +93,9 @@ class ZfwController extends Controller
             return false;
         }
 
-        $insertData = [];
+        $insertData = [
+            'created_at'=>Carbon::now()->toDateTimeString()
+        ];
 
         $fields = $this->getFormConfig($form,'fields');
         foreach ($fields as $fieldName=>$data) {
