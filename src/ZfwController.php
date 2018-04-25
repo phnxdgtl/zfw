@@ -94,7 +94,7 @@ class ZfwController extends Controller
         }
 
         $insertData = [
-            'created_at'=>Carbon::now()->toDateTimeString()
+            'created_at'=>Carbon::now('Europe/London')->toDateTimeString()
         ];
 
         $fields = $this->getFormConfig($form,'fields');
