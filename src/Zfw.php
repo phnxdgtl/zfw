@@ -35,7 +35,7 @@ class Zfw {
          */
 
         array_walk($attributes,function(&$item) {
-            $item = "\"$item\"";
+            $item = '"'.trim($item, '"')."'";
         });
 
         return urldecode(http_build_query($attributes,'',' '));
