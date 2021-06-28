@@ -3,7 +3,7 @@
     "description": "A Laravel package for automating data collection from forms",
     "require": {
         "php": ">=7",
-        "laravel/framework": "5.*",
+        "laravel/framework": ">=5",
         "sunra/php-simple-html-dom-parser": "1.5.2"
     },
     "authors": [
