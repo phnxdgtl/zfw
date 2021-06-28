@@ -30,14 +30,6 @@ class Zfw {
         $attributes['class'] = 'zfw';
         $attributes['action'] = route('zfw',['form' => $formName]);
 
-        /**
-         * OK, this is a bit convoluted, could have just looped $attributes
-         */
-
-        array_walk($attributes,function(&$item) {
-            $item = '"'.trim($item, '"')."'";
-        });
-
         return urldecode(http_build_query($attributes,'',' '));
     }
 
