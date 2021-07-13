@@ -125,8 +125,9 @@ class ZfwController extends Controller
 
         $emailData = [];
 
-        $to     = $this->getFormConfig($form,'to');
-        $fields = $this->getFormConfig($form,'fields');
+        $to      = $this->getFormConfig($form, 'to');
+        $fields  = $this->getFormConfig($form, 'fields');
+        $subject = $this->getFormConfig($form, 'subject');
 
         foreach ($fields as $fieldName=>$data) {
             $value = $this->formatValueFromRequest($request, $form, $fieldName);
@@ -154,7 +155,7 @@ class ZfwController extends Controller
 
         $message = implode("  \n",$emailData);
 
-        Mail::to($to)->send(new ZfwNotification($message));
+        Mail::to($to)->send(new ZfwNotification($message, $subject));
      }
 
      /**
@@ -170,7 +171,8 @@ class ZfwController extends Controller
 
         $emailData = [];
 
-        $to     = $this->getFormConfig($form,'to');
+        $to      = $this->getFormConfig($form,'to');
+        $subject = $this->getFormConfig($form, 'subject');
 
         /**
          * If we don't set a "to" in the config, don't send an email
@@ -230,7 +232,7 @@ class ZfwController extends Controller
                         ]);
         $message .= "\n\n[Click here to view this message]($gdprLink)";
 
-        Mail::to($to)->send(new ZfwNotification($message));
+        Mail::to($to)->send(new ZfwNotification($message, $subject));
      }
 
     /**
