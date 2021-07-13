@@ -14,15 +14,23 @@ class ZfwNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $message; // The text of the message
+    public $subject; // The subject of the message
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $subject = '')
     {
         $this->message = $message;
+
+        if ($subject) {
+            $this->subject = $subject;
+        } else {
+            $this->subject = 'Form from website';
+        }
+        
     }
 
     /**
@@ -39,7 +47,7 @@ class ZfwNotification extends Mailable
                     'message'=>$this->message
                 ])
                 ->from($from)
-                ->subject('Form from website');
+                ->subject($this->subject);
     }
 
     protected function getDefaultFromAddress() {
