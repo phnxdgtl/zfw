@@ -44,7 +44,8 @@ class ZfwNotification extends Mailable
         $from = $this->getDefaultFromAddress();
 
         return $this->markdown('zfw.notification-email',[
-                    'message'=>$this->message
+                    'message' => $this->message,
+                    'subject' => $this->subject
                 ])
                 ->from($from)
                 ->subject($this->subject);

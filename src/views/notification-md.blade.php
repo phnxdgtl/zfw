@@ -1,5 +1,5 @@
 @component('mail::message')
-# Form received
+# {{ $subject }}
 
 The following form has been submitted via the website:
 
