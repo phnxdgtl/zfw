@@ -144,8 +144,12 @@ class ZfwController extends Controller
             if ($data->type == 'textarea') {
                 $string = "\n$string \n*$value*\n\n";
             }
-            else if ($data->type == 'checkbox' && in_array($value,[1,0])) {
-                $string .= $value ? 'No' : 'Yes';
+            else if ($data->type == 'checkbox' && in_array($value,[1,0,'No','Yes'])) {
+                if ($value === 0 || $value === '0' || $value === 'Yes') {
+                    $string .= 'Yes';
+                } else {
+                    $string .= 'No';
+                }
             }
             else {
                 $string .= "$value";
