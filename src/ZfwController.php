@@ -112,56 +112,7 @@ class ZfwController extends Controller
 
      }
 
-     /**
-      * Email data from a form to the recipient stated in the config file
-      * NOTE: this is not GDPR compliant. I'm really leaving this here for
-      * reference only. See: @emailFormDataGDPR
-      *
-      * @param [type] $request
-      * @param [type] $form
-      * @return void
-      */
-     protected function emailFormData($request, $form) {
-
-        $emailData = [];
-
-        $to      = $this->getFormConfig($form, 'to');
-        $fields  = $this->getFormConfig($form, 'fields');
-        $subject = $this->getFormConfig($form, 'subject');
-
-        foreach ($fields as $fieldName=>$data) {
-            $value = $this->formatValueFromRequest($request, $form, $fieldName);
-
-            if (!$value) continue; // This is right, I think? Don't show a label for an empty value?
-
-            /**
-             * Also, if we haven't specified a label, don't include this in the email. This makes it easy to exclude fields from the email.
-             */
-            if (empty($data->label)) continue;
-
-            $labelDelimiter = substr($data->label,-1) == '?' ? '': ':';
-            $string = "**{$data->label}{$labelDelimiter}** ";
-            if ($data->type == 'textarea') {
-                $string = "\n$string \n*$value*\n\n";
-            }
-            else if ($data->type == 'checkbox' && in_array($value,[1,0,'No','Yes'])) {
-                if ($value === 1 || $value === '1' || $value === 'Yes') {
-                    $string .= 'Yes';
-                } else {
-                    $string .= 'No';
-                }
-            }
-            else {
-                $string .= "$value";
-            }
-            $emailData[] = $string;
-        }
-
-        $message = implode("  \n",$emailData);
-
-        Mail::to($to)->send(new ZfwNotification($message, $subject));
-     }
-
+     
      /**
       * Email data from a form to the recipient stated in the config file
       * in a GDPR-compliant way; ie, a link to the CMS.
@@ -205,8 +156,12 @@ class ZfwController extends Controller
                  */
                 $string = "\n$string \n*$value*\n\n";
             }
-            else if ($data->type == 'checkbox' && in_array($value,[1,0])) {
-                $string .= $value ? 'No' : 'Yes';
+            else if ($data->type == 'checkbox' && in_array($value,[1,0,'No','Yes'])) {
+                if ($value === 1 || $value === '1' || $value === 'Yes') {
+                    $string .= 'Yes';
+                } else {
+                    $string .= 'No';
+                }
             }
             else {
                 $string .= "$value";
