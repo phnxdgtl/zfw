@@ -145,7 +145,7 @@ class ZfwController extends Controller
                 $string = "\n$string \n*$value*\n\n";
             }
             else if ($data->type == 'checkbox' && in_array($value,[1,0,'No','Yes'])) {
-                if ($value === 0 || $value === '0' || $value === 'Yes') {
+                if ($value === 1 || $value === '1' || $value === 'Yes') {
                     $string .= 'Yes';
                 } else {
                     $string .= 'No';
