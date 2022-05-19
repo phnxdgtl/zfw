@@ -59,10 +59,7 @@ class ZfwNotification extends Mailable
             case 'production':
             case 'local':
             default:
-                $app_url    = env('APP_URL');
-                $parse_url  = parse_url($app_url);
-                $host       = env('MAIL_FROM_ADDRESS', preg_replace('/^www\./','',$parse_url['host'] ?? ''));
-                $from       = 'noreply@'.$host;
+                $from       = env('MAIL_FROM_ADDRESS');
                 break;
         }
         return $from;
