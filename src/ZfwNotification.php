@@ -61,7 +61,7 @@ class ZfwNotification extends Mailable
             default:
                 $app_url    = env('APP_URL');
                 $parse_url  = parse_url($app_url);
-                $host       = preg_replace('/^www\./','',$parse_url['host']);
+                $host       = env('MAIL_FROM_ADDRESS', preg_replace('/^www\./','',$parse_url['host'] ?? ''));
                 $from       = 'noreply@'.$host;
                 break;
         }
